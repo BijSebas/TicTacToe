@@ -1,0 +1,162 @@
+from IPython.display import clear_output
+import random
+
+def display_board(board):
+    
+    print(start_board[7]+' | '+start_board[8]+' | '+start_board[9])
+    print('--'+'|'+'---'+'|'+'--')
+    print(start_board[4]+' | '+start_board[5]+' | '+start_board[6])
+    print('--'+'|'+'---'+'|'+'--')
+    print(start_board[1]+' | '+start_board[2]+' | '+start_board[3])
+    
+
+def player_input():
+    
+    marker = ' '
+    
+    while marker != 'X' and marker != 'O':
+        marker = input('Player 1, choose X or O: ').upper()
+        
+    player1_marker = marker
+    
+    if player1_marker == 'X':
+        player2_marker = 'O'
+    else:
+        player2_marker = 'X'
+        
+    return (player1_marker,player2_marker)
+
+
+
+def place_marker(board,marker,position):
+    board[position] = marker
+
+    
+
+def win_check(board, mark):
+    
+    return ((start_board[7] == mark and start_board[8] == mark and start_board[9] == mark) or
+           (start_board[4] == mark and start_board[5] == mark and start_board[6] == mark) or
+           (start_board[1] == mark and start_board[2] == mark and start_board[3] == mark) or
+           (start_board[1] == mark and start_board[4] == mark and start_board[7] == mark) or
+           (start_board[2] == mark and start_board[5] == mark and start_board[8] == mark) or
+           (start_board[3] == mark and start_board[6] == mark and start_board[9] == mark) or
+           (start_board[1] == mark and start_board[5] == mark and start_board[9] == mark) or
+           (start_board[3] == mark and start_board[5] == mark and start_board[7] == mark))
+
+
+def choose_first():
+    
+    flip = random.randint(0,1)
+    
+    if flip == 0:
+        return 'Player 1 '
+    else:
+        return 'Player 2 '
+
+    
+def space_check(board,position):
+    
+    return board[position] == ' '
+
+
+def full_board_check(board):
+    
+    for i in range (1,10):
+        if space_check(board,i):
+            return False
+    
+    return True
+
+
+def player_choice(board):
+    
+    position = 0
+    
+    while position not in [1,2,3,4,5,6,7,8,9] or not space_check(board,position):
+        position = int(input('\nChoose a position: (1-9) '))
+        
+    return position
+
+
+def replay():
+    
+    choice = input('\nDo you want to play again? (Y/N) ')
+    
+    return choice == 'Y'
+
+
+while True:
+    
+    clear_output()
+    
+    start_board = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ']
+    
+    player1_marker, player2_marker = player_input()    
+    
+    turn = choose_first()
+    
+    print(turn + 'will go first!')
+    
+    play_game = input('Are you ready to play? (Y,N) ')
+    
+    if play_game == 'Y':
+        game_on = True
+        
+    else:
+        game_on = False
+        
+    while game_on == True:
+        
+        if turn == 'Player 1':
+            
+            clear_output()
+            
+            display_board(start_board)
+            
+            position = player_choice(start_board)
+            
+            place_marker(start_board,player1_marker,position)
+            
+            if win_check(start_board,player1_marker):
+                clear_output()
+                display_board(start_board)
+                print('\nPlayer 1 HAS WON!!!')
+                game_on = False
+            else:
+                if full_board_check(start_board):
+                    clear_output()
+                    display_board(start_board)
+                    print("\nIt's a DRAW!")
+                    game_on = False
+                else:
+                    turn = 'Player 2'
+            
+        else:
+            
+            clear_output()
+            
+            display_board(start_board)
+            
+            position = player_choice(start_board)
+            
+            place_marker(start_board,player2_marker,position)
+            
+            if win_check(start_board,player2_marker):
+                clear_output()
+                display_board(start_board)
+                print('\nPlayer 2 HAS WON!!!')
+                game_on = False
+            else:
+                if full_board_check(start_board):
+                    clear_output()
+                    display_board(start_board)
+                    print("\nIt's a DRAW!")
+                    game_on = False
+                else:
+                    turn = 'Player 1'
+    
+    
+    
+    if not replay():
+        break
