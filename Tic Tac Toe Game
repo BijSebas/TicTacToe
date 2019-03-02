@@ -155,8 +155,6 @@ while True:
                     game_on = False
                 else:
                     turn = 'Player 1'
-    
-    
-    
+
     if not replay():
         break
